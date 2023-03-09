@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:noteapp/screens/addnotescreen.dart';
 
 import 'loginscreen.dart';
@@ -44,11 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   FirebaseFirestore.instance.collection("notes").snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return const Center(
-                    child: CupertinoActivityIndicator(
-                        // radius:  1,
-                        ),
-                  );
+                  return Center(
+                      child: Container(
+                    child: Lottie.asset('assets/loading.json'),
+                  ));
                 } else {
                   return Column(children: [
                     // ListView.builder(
@@ -63,6 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     //     );
                     //   }),
                     ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
                         return Card(
