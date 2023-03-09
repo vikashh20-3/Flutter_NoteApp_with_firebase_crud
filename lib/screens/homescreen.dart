@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   User? userId = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,48 +38,113 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               )
             ]),
-        body: Container(
-            child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("users")
-                    .where("userId", isEqualTo: userId?.uid)
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text("Something went wrong ");
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CupertinoActivityIndicator());
-                  }
-                  if (snapshot.data!.docs.isEmpty) {
-                    return const Text("No data found ");
-                  }
-                  if (snapshot.hasData) {
-                    final docs = snapshot.data!.docs;
-                    return ListView.builder(
-                      itemCount: docs.length,
+        body: SingleChildScrollView(
+          child: StreamBuilder<QuerySnapshot>(
+              stream:
+                  FirebaseFirestore.instance.collection("notes").snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CupertinoActivityIndicator(
+                        // radius:  1,
+                        ),
+                  );
+                } else {
+                  return Column(children: [
+                    // ListView.builder(
+                    //   itemCount: snapshot.data!.docs.length,
+                    //   itemBuilder: ((context, index) {
+                    //     return  Card(
+                    //       child: ListTile(
+                    //         title: Text("h"),
+                    //       // title: Text(snapshot.data!.docs[index].get('note')),
+                    //       // subtitle: Text(snapshot.data!.docs[index].get('userId')),
+                    //                           ),
+                    //     );
+                    //   }),
+                    ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
-                        final data = snapshot.data!.docs[index]['note'];
-                        return ListTile(
-                          title: Text(data['note']),
-                          // subtitle: Text(data['phone']),
+                        return Card(
+                          child: ListTile(
+                            //         title: Text("h"),
+                            title: Text(snapshot.data!.docs[index].get('note')),
+                            // title: Text("h"),
+                            //       // subtitle: Text(snapshot.data!.docs[index].get('userId')),
+                            //                           ),
+                          ),
                         );
                       },
-                    );
-                  }
-                  // if (snapshot.data != null && snapshot != null) {
-                  //   return ListView.builder(
-                  //     itemCount: snapshot.data!.docs.length,
-                  //     itemBuilder: (context, index) {
-                  //       return Card(
-                  //         child: ListTile(
-                  //             title: Text(snapshot.data!.docs[index]['note'])),
-                  //       );
-                  //     },
-                  //   );
-                  // }
-                  return Container();
-                })),
+                    )
+                  ]);
+                }
+
+                // Text(snapshot.data!.docs[0].get('note')),
+                // snapshot.data!.docs[0].get('userId'),
+                // snapshot.data!.docs[0].get('email'),
+                // snapshot.data!.docs[0].get('url'),
+                // )]
+                // );
+              }
+              // }
+              ),
+        ),
+        // SizedBox(
+        //     height: 120,
+        //     width: MediaQuery.of(context).size.width,
+        //     child: Image.asset("assets/images/N.jpg")),
+
+        //                 _contactCard(
+        //                     "Our Office Address",
+        //                     address,
+        //                     snapshot.data.docs[0].get('number'),
+        //                     snapshot.data.docs[0].get('name'),
+        // snapshot.data.docs[0].get('email'),
+        //                     snapshot.data.docs[0].get('url'),
+        //                 ),
+
+        // }
+        // body: StreamBuilder(
+        //     stream: FirebaseFirestore.instance
+        //         .collection("users")
+        //         .where("userId", isEqualTo: userId?.uid)
+        //         .snapshots(),
+        //     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        //       if (snapshot.hasError) {
+        //         return const Text("Something went wrong ");
+        //       }
+        //       if (snapshot.connectionState == ConnectionState.waiting) {
+        //         return const Center(child: CupertinoActivityIndicator());
+        //       }
+        //       if (snapshot.data!.docs.isEmpty) {
+        //         return const Text("No data found ");
+        //       }
+        //       if (snapshot.hasData) {
+        //         // final docs = snapshot.data!.docs;
+        //         return ListView.builder(
+        //           itemCount: snapshot.data!.docs.length,
+        //           itemBuilder: (context, index) {
+        //             final data = snapshot.data!.docs[index]['note'];
+        //             return ListTile(
+        //               title: Text(data['note']),
+        //               // subtitle: Text(data['phone']),
+        //             );
+        //           },
+        //         );
+        // }
+        // if (snapshot.data != null && snapshot != null) {
+        //   return ListView.builder(
+        //     itemCount: snapshot.data!.docs.length,
+        //     itemBuilder: (context, index) {
+        //       return Card(
+        //         child: ListTile(
+        //             title: Text(snapshot.data!.docs[index]['note'])),
+        //       );
+        //     },
+        //   );
+        // }
+        //   return Container();
+        // }),
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(right: 8.0, bottom: 10),
           child: FloatingActionButton(

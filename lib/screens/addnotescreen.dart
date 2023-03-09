@@ -36,7 +36,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
             var userNote = userNoteController.text.trim();
             if (userNote != "") {
               try {
-                await FirebaseFirestore.instance.collection("notes").doc(userId!.uid).set({
+                await FirebaseFirestore.instance.collection("notes").doc().set({
                   "Created At": DateTime.now(),
                   "note": userNote,
                   "userId": userId!.uid,
