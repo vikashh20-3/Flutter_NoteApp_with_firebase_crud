@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:noteapp/screens/homescreen.dart';
 
 class AddNoteScreen extends StatefulWidget {
   const AddNoteScreen({super.key});
@@ -40,6 +42,8 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   "Created At": DateTime.now(),
                   "note": userNote,
                   "userId": userId!.uid,
+                }).then((value) => {
+                  Get.off(()=>const HomeScreen()),
                 });
               } catch (e) {
                 log("Error while saving the notes $e");

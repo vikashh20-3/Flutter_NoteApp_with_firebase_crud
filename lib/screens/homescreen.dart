@@ -50,6 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Container(
                     child: Lottie.asset('assets/loading.json'),
                   ));
+                } else if (snapshot.data!.docs.isEmpty) {
+                  return Center(
+                    child: Center(child: Text("No data found")),
+                  );
                 } else {
                   log("Data fetched to home screen ");
                   return Column(children: [
@@ -74,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: ListTile(
                             //         title: Text("h"),
                             title: Text(notes),
-                            subtitle: Text(userId),
+                            subtitle: Text(userid),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -82,19 +86,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onTap: () {
                                     log(userid);
                                     Get.to(() => const EditNoteScreen(),
-                                        arguments:  {
-                                      'notes':notes,
-                                      'userid':userid,
-                                    });
+                                        arguments: {
+                                          'notes': notes,
+                                          'userid': userid,
+                                        });
                                   },
                                   child: const Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: Icon(Icons.edit),
                                   ),
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 5.0),
-                                  child: Icon(Icons.delete),
+                                GestureDetector(
+                                  onTap: () async {
+                                    await FirebaseFirestore.instance
+                                        .collection('notes')
+                                        .doc(userid)
+                                        .delete();
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(left: 5.0),
+                                    child: Icon(Icons.delete),
+                                  ),
                                 )
                               ],
                             ),
