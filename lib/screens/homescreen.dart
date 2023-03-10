@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:noteapp/screens/addnotescreen.dart';
+import 'package:noteapp/screens/editnotescreen.dart';
 
 import 'loginscreen.dart';
 
@@ -50,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Lottie.asset('assets/loading.json'),
                   ));
                 } else {
+                  log("Data fetched");
                   return Column(children: [
                     // ListView.builder(
                     //   itemCount: snapshot.data!.docs.length,
@@ -57,8 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     //     return  Card(
                     //       child: ListTile(
                     //         title: Text("h"),
-                    //       // title: Text(snapshot.data!.docs[index].get('note')),
-                    //       // subtitle: Text(snapshot.data!.docs[index].get('userId')),
                     //                           ),
                     //     );
                     //   }),
@@ -67,12 +67,32 @@ class _HomeScreenState extends State<HomeScreen> {
                       shrinkWrap: true,
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
+                        var notes = snapshot.data!.docs[index]['note'];
+                        var userId = snapshot.data!.docs[index]['userId'];
                         return Card(
                           child: ListTile(
                             //         title: Text("h"),
-                            title: Text(snapshot.data!.docs[index].get('note')),
+                            title: Text(notes),
+                            subtitle: Text(userId),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Get.to(() => const EditNoteScreen());
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(Icons.edit),
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 5.0),
+                                  child: Icon(Icons.delete),
+                                )
+                              ],
+                            ),
                             // title: Text("h"),
-                            //       // subtitle: Text(snapshot.data!.docs[index].get('userId')),
                             //                           ),
                           ),
                         );
