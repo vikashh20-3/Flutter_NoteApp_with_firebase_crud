@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Lottie.asset('assets/loading.json'),
                   ));
                 } else {
-                  log("Data fetched");
+                  log("Data fetched to home screen ");
                   return Column(children: [
                     // ListView.builder(
                     //   itemCount: snapshot.data!.docs.length,
@@ -69,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         var notes = snapshot.data!.docs[index]['note'];
                         var userId = snapshot.data!.docs[index]['userId'];
+                        var userid = snapshot.data!.docs[index].id;
                         return Card(
                           child: ListTile(
                             //         title: Text("h"),
@@ -79,7 +80,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    Get.to(() => const EditNoteScreen());
+                                    log(userid);
+                                    Get.to(() => const EditNoteScreen(),
+                                        arguments:  {
+                                      'notes':notes,
+                                      'userid':userid,
+                                    });
                                   },
                                   child: const Padding(
                                     padding: EdgeInsets.all(8.0),
