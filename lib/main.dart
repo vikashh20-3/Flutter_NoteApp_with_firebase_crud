@@ -6,6 +6,7 @@ import 'package:noteapp/screens/homescreen.dart';
 import 'package:noteapp/screens/loginscreen.dart';
 
 void main() async {
+  
   WidgetsFlutterBinding
       .ensureInitialized(); // check that all your background services are initialized or not
   await Firebase
@@ -13,7 +14,9 @@ void main() async {
   runApp(const MyApp());
 }
 
+
 class MyApp extends StatefulWidget {
+  
   const MyApp({super.key});
 
   @override
